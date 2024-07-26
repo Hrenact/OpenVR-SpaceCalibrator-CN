@@ -1,76 +1,78 @@
 # OpenVR Space Calibrator
 
-This helps you use tracked VR devices from one company with any other. It aligns multiple tracking systems with a quick calibration step. It may not work for your setup, but there are many cases that work to a degree, and some work very well.
+这有助于你将一家公司的 VR 设备与其它任何公司的设备一起使用。它通过一个快速的校准步骤来对齐多个跟踪系统。它可能不适用于你的设置，但在许多情况下可以部分工作，有些情况下效果非常好。
 
-- Rift CV1 x Vive devices: works very well with the v2 (blue logo) trackers, v1 trackers (grey logo, not in production) have major interference issues in the IR spectrum, controller wands (both gen) and Index controllers work very well.
-- Rift S, Quest, Windows MR, other SLAM inside-out tracked HMDs x Vive devices: works very well when you aren't moving around the room far (e.g. Beat Saber) but a lot of walking around causes a nontrivial amount of drift between systems. Your results may vary depending on your space. It's possible some of this can be fixed in software with a better calibration algorithm.
-- Quest wireless streaming is particularly bad right now and requires frequent recalibration, but it does work for a short time until one of many factors causes it to drift. With wireless devices, moving slowly when calibrating and using the Slow or Very Slow calibration modes is effective at reducing the initial error.
-- Any non-Rift HMD x Touch controllers: does not work, the Oculus driver requires the HMD is a Rift. It's theoretically possible to work around this in software but as far as I know it hasn't been done as it would require a fair amount of reverse engineering effort.
+- Rift CV1 与 Vive 设备：与 v2（蓝色标志）跟踪器配合效果非常好，v1 跟踪器（灰色标志，已停产）在红外光谱中存在重大干扰问题。控制器 Wands（both gen）和 Index 控制器效果都非常好。
+- Rift S、Quest、Windows MR 及其他 SLAM 内向外跟踪的 HMD 与 Vive 设备：当你不在房间内大幅移动时（例如玩 Beat Saber）效果很好，但大量走动会导致系统之间出现相当程度的漂移。具体效果可能会因你的空间而异。一些问题可能通过改进的校准算法在软件中解决。
+- 目前，Quest 的无线串流表现特别差，需要频繁重新校准，但在短时间内还是可以工作的，直到多个因素中的一个导致漂移。对于无线设备，校准时缓慢移动并使用慢速或非常慢的校准模式可以有效减少初始误差。
+- 任何非 Rift HMD 与 Touch 控制器：无法使用，Oculus 驱动程序要求 HMD 必须是 Rift。理论上可以通过软件解决，但据我所知，还没有人这样做，因为这需要相当多的逆向工程工作。
 
-There is a community of a few thousand on [**Discord**](https://discord.gg/m7g2Wyj) and a newer community on [**Reddit**](https://www.reddit.com/r/MixedVR/). You may find the answer to your question in [the **wiki**](https://github.com/pushrax/OpenVR-SpaceCalibrator/wiki).
+在 [**Discord**](https://discord.gg/m7g2Wyj) 上有一个几千人的社区，并且在 [**Reddit**](https://www.reddit.com/r/MixedVR/) 上也有一个新社区。你可以在 [**wiki**](https://github.com/pushrax/OpenVR-SpaceCalibrator/wiki) 中找到你的问题的答案。
 
-A quick video of how this works using an old version (~v0.3) is available at https://www.youtube.com/watch?v=W3TnQd9JMl4. The user interface has been upgraded since then; the calibration is now done via a SteamVR dashboard menu, and there's much more configurability.
+可以观看一个展示旧版本 (~v0.3) 如何工作的快速视频，链接是：https://www.youtube.com/watch?v=W3TnQd9JMl4 。自那时以来，用户界面已经升级，现在可以通过 SteamVR 仪表板菜单进行校准，并且有更多的可配置选项。
 
-### Install
+### 安装软件
 
-Before following the directions below, download and run the installer for the [latest release](https://github.com/hyblocker/OpenVR-SpaceCalibrator/releases/latest). This will automatically set up SteamVR for use with multiple tracking systems (`activateMultipleDrivers: true`). There are many guides that say you need to edit the SteamVR config manually. You do not.
+在按照下面的说明操作之前，请下载并运行 [最新版本](https://github.com/hyblocker/OpenVR-SpaceCalibrator/releases/latest) 的安装程序。这将自动将 SteamVR 设置为使用多个跟踪系统（`activateMultipleDrivers: true`）。有很多指南说你需要手动编辑 SteamVR 配置，但其实不需要。
 
-### Usage
+> 此汉化版没有自动安装程序，意味着软件可能不会自动设置 SteamVR 设置，你需要手动编辑！
 
-Once Space Calibrator has a calibration, it works in the background to keep your devices configured correctly. Since v0.8, everything aside from creating the calibration is automated.
+### 使用方法
 
-### Calibration
+一旦 空间校准器 完成校准，它会在后台工作以保持设备的正确配置。从 v0.8 版本开始，除了创建校准之外，所有操作都是自动化的。
 
-This fork supports continuous calibration. This means that there are two ways to calibrate:
+### 校准
 
-#### 1. Normal Calibration
+这个分支支持连续校准。这意味着有两种校准方式：
 
->  Use this if you do not have a tracker on your VR headset.
+#### 1. 普通校准
 
-As part of first time setup, or when you make a change to your space (e.g. move a sensor), and occasionally as the calibration drifts over time (consumer VR tracking isn't perfectly stable), you'll need to run a calibration:
+>  当你在头戴设备上没有 Tracker 时，请使用此方法。
 
-1. Copy the chaperone/guardian bounds from your HMD's play space. This doesn't need to be run if your HMD's play space hasn't changed since last time you copied it. __Example:__ if you're using the Rift with Vive trackers and you bump a Vive lighthouse, or if the calibration has just drifted a little, you likely don't need to run this step, but if you bump an Oculus sensor you will (after running Oculus guardian setup again).
+作为第一次设置的一部分，或者当你对空间进行更改（例如移动传感器）时，偶尔由于校准随时间漂移（消费级 VR 跟踪并不完全稳定），你需要运行一次校准：
+
+1. 从你的 HMD 的游戏空间中复制 Chaperone/Guardian 边界。如果自上次复制以来 HMD 的游戏空间没有变化，则不需要运行此步骤。__示例：__ 如果你在使用 Rift 和 Vive 跟踪器时碰到一个 Vive Lighthouse，或者校准刚刚稍微漂移，你可能不需要运行此步骤，但如果你碰到一个 Oculus 传感器，则需要运行此步骤（在重新运行 Oculus Guardian 设置之后）。
    
-   1. Run SteamVR, with only devices from your HMD's tracking system powered on. __Example:__ for Rift with Vive trackers, don't turn on the trackers yet.
-   2. Confirm your chaperone/guardian is set up with the walls in the right place. If you change it later, you need to run step again.
-   3. Open SPACE CAL in the SteamVR dashboard overlay.
-   4. Click `Copy Chaperone Bounds to profile`
+   1. 运行 SteamVR，并且只开启你 HMD 跟踪系统中的设备。__示例：__ 对于 Rift 和 Vive 跟踪器的组合，不要先开启跟踪器。
+   2. 确认你的 Chaperone/Guardian 已正确设置墙壁位置。如果之后进行更改，你需要再次运行此步骤。
+   3. 在 SteamVR 叠加层中打开 SPACE CAL。
+   4. 点击 `将 Chaperone 边界复制到配置文件`
 
-2. Calibrate devices.
+2. 校准设备。
    
-   1. Open SteamVR if you haven't already. Turn on some or all your devices.
-   2. Open SPACE CAL in the SteamVR dashboard overlay.
-   3. Select one device from the reference space on the left and one device from the target space on the right. If you turned on multiple devices from one space and can't tell which one is selected, click "Identify selected devices" to blink an LED or vibrate it. __Example:__ for Rift with Vive trackers, you'll see the Touch controllers on the left, and Vive trackers on the right. __Pro tip:__ if you turn on just one Vive tracker, you don't have to figure out which one is selected.
-   4. Hold these two devices in one hand, like they're glued together. If they slip, calibration won't work as well.
-   5. Click `Start Calibration`
+   1. 如果你还没有打开 SteamVR，请先打开它。然后开启一些或全部设备。
+   2. 在 SteamVR 叠加层中打开 SPACE CAL。
+   3. 从左侧的 主设备 中选择一个设备，从右侧的 目标设备 中选择一个设备。如果你开启了多个来自同一空间的设备且无法确定哪个被选中，点击“标识选定设备”以使其 LED 闪烁或振动。__示例：__ 对于 Rift 和 Vive 跟踪器，你会看到左侧是 Touch 控制器，右侧是 Vive 跟踪器。__小贴士：__ 如果你只开启了一个 Vive 跟踪器，你不需要弄清楚哪个被选中。
+   4. 将这两个设备用一只手拿起，并握牢它们。如果它们在校准过程中发生偏移，最终效果可能会受到影响。
+   5. 点击 `开始校准`
    6. Move and rotate your hand around slowly a few times, like you're calibrating the compass on your phone. You want to sample as many orientations as possible.
    7. Done! A profile will be saved automatically. If you haven't already, turn on all your devices. Space Calibrator will automatically apply the calibration to devices as they turn on.
 
-#### 2. Continuous Calibration
+#### 2. 连续校准
 
-> Use this only if you have a tracker on your VR headset.
+> 仅在你的头戴设备上有 Tracker 时才使用此方法。
 
-Continuous calibration allows you to calibrate playspaces continuously, eliminating the need to do any of the work above.
+连续校准允许你持续校准游戏空间，从而无需执行上述任何操作。
 
-1. Start SteamVR with the VR headset you wish to use.
+1. 启动 SteamVR，并佩戴你希望使用的 VR 头显。
 
-2. Turn on **ONLY** the tracker which is attached on the VR headset.
+2. **仅开启** 附加在 VR 头显上的 Tracker。
 
-3. Select the VR headset and tracker and calibrate.
+3. 选择 VR 头显和 Tracker，然后进行校准。
 
-4. Turn on your other devices.
+4. 打开你的其它设备。
 
-5. You should see them line up with you as you after moving around your playspace for a bit for an initial calibration.
+5. 在进行初始校准时，当你在游戏空间中移动一会儿之后应该会看到它们与你对齐。
 
-### Calibration outside VR
+### VR 外的校准
 
-You can calibrate without using the dashboard overlay by unminimizing Space Calibrator after opening SteamVR (it starts minimized). This is required if you're calibrating for a lone HMD without any devices in its tracking system.
+你可以在打开 SteamVR 后通过恢复 空间校准器 来进行校准（它默认以最小化状态启动）。如果你正在为没有任何跟踪系统设备的独立 HMD 进行校准，这是必需的。
 
-### Compiling your own build
+### 编译你自己的版本
 
-Open `OpenVR-SpaceCalibrator.sln` in Visual Studio 2017 and build. There are no external dependencies.
+在 Visual Studio 2017 中打开 `OpenVR-SpaceCalibrator.sln` 并进行编译。没有外部依赖项。
 
-### The math
+### 数学原理
 
-See [math.pdf](https://github.com/pushrax/OpenVR-SpaceCalibrator/blob/master/math.pdf) for details.
-If you have some ideas for how to improve the calibration process, let me know!
+有关详细信息，请参见 [math.pdf](https://github.com/pushrax/OpenVR-SpaceCalibrator/blob/master/math.pdf)。
+如果你有一些改进校准过程的想法，请在[原项目](https://github.com/hyblocker/OpenVR-SpaceCalibrator)上告诉作者！
