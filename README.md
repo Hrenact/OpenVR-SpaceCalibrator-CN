@@ -13,7 +13,7 @@
 
 ### 安装软件
 
-在按照下面的说明操作之前，请下载并运行 [最新版本]https://github.com/Hrenact/OpenVR-SpaceCalibrator-CN/releases/latest) 的安装程序。这将自动将 SteamVR 设置为使用多个跟踪系统（`activateMultipleDrivers: true`）。有很多指南说你需要手动编辑 SteamVR 配置，但其实不需要。
+在按照下面的说明操作之前，请下载并运行 [最新版本](https://github.com/Hrenact/OpenVR-SpaceCalibrator-CN/releases/latest) 的安装程序。这将自动将 SteamVR 设置为使用多个跟踪系统（`activateMultipleDrivers: true`）。有很多指南说你需要手动编辑 SteamVR 配置，但其实不需要。
 
 > 此汉化版没有自动安装程序，意味着软件可能不会自动设置 SteamVR 设置，你需要手动编辑！
 
