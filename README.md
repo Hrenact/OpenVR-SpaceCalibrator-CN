@@ -44,9 +44,9 @@
    2. 在 SteamVR 叠加层中打开 SPACE CAL。
    3. 从左侧的 主设备 中选择一个设备，从右侧的 目标设备 中选择一个设备。如果你开启了多个来自同一空间的设备且无法确定哪个被选中，点击“标识选定设备”以使其 LED 闪烁或振动。__示例：__ 对于 Rift 和 Vive 跟踪器，你会看到左侧是 Touch 控制器，右侧是 Vive 跟踪器。__小贴士：__ 如果你只开启了一个 Vive 跟踪器，你不需要弄清楚哪个被选中。
    4. 将这两个设备用一只手拿起，并握牢它们。如果它们在校准过程中发生偏移，最终效果可能会受到影响。
-   5. 点击 `开始校准`
-   6. Move and rotate your hand around slowly a few times, like you're calibrating the compass on your phone. You want to sample as many orientations as possible.
-   7. Done! A profile will be saved automatically. If you haven't already, turn on all your devices. Space Calibrator will automatically apply the calibration to devices as they turn on.
+   5. 点击 `开始校准`。
+   6. 缓慢地移动和旋转你的手几次，例如：在空中画 8 字。你需要采样尽可能多的方向。
+   7. 完成！配置文件将自动保存。如果你还没有开启所有设备，请打开它们。空间校准器 会在设备开启时自动应用校准。
 
 #### 2. 连续校准
 
