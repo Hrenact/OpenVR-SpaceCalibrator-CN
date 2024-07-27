@@ -31,19 +31,28 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Add MSBuild to PATH
-      uses: microsoft/setup-msbuild@v1.0.2
-
-    - name: Restore NuGet packages
-      working-directory: ${{env.GITHUB_WORKSPACE}}
-      run: nuget restore ${{env.SOLUTION_FILE_PATH}}
+      uses: microsoft/setup-msbuild@v2
+      with:
+        msbuild-architecture: x64
 
     - name: Build
       working-directory: ${{env.GITHUB_WORKSPACE}}
-      # Add additional options to the MSBuild command line here (like platform or verbosity level).
-      # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
       run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}}
 
-    - name: Upload a Build Artifac
+    - name: Upload Build Artifac
       uses: actions/upload-artifact@v4.3.4
       with:
-        path: .
+        name: Build.zip
+        path: ./x64/Release
+
+    - name: Install NSIS
+      uses: repolevedavaj/install-nsis@v1.0.2
+
+    - name: Build Installer
+      run: makensis /V4 ./install/installer.nsi
+
+    - name: Upload Installer
+      uses: actions/upload-artifact@v4.3.4
+      with:
+        name: Installer.zip
+        path: ./install/OpenVR-SpaceCalibrator.exe
