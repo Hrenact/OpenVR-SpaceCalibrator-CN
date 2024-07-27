@@ -22,12 +22,12 @@ void BuildProfileEditor();
 void BuildMenu(bool runningInOverlay);
 
 static const ImGuiWindowFlags bareWindowFlags =
-	ImGuiWindowFlags_NoTitleBar |
-	ImGuiWindowFlags_NoResize |
-	ImGuiWindowFlags_NoMove |
-	ImGuiWindowFlags_NoScrollbar |
-	ImGuiWindowFlags_NoScrollWithMouse |
-	ImGuiWindowFlags_NoCollapse;
+		ImGuiWindowFlags_NoTitleBar |
+		ImGuiWindowFlags_NoResize |
+		ImGuiWindowFlags_NoMove |
+		ImGuiWindowFlags_NoScrollbar |
+		ImGuiWindowFlags_NoScrollWithMouse |
+		ImGuiWindowFlags_NoCollapse;
 
 void BuildContinuousCalDisplay();
 void ShowVersionLine();
@@ -38,7 +38,7 @@ void BuildMainWindow(bool runningInOverlay_)
 {
 	runningInOverlay = runningInOverlay_;
 	bool continuousCalibration = CalCtx.state == CalibrationState::Continuous || CalCtx.state == CalibrationState::ContinuousStandby;
-	
+
 	auto &io = ImGui::GetIO();
 
 	ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f), ImGuiCond_Always);
@@ -52,10 +52,12 @@ void BuildMainWindow(bool runningInOverlay_)
 
 	ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImGui::GetStyleColorVec4(ImGuiCol_Button));
 
-	if (continuousCalibration) {
+	if (continuousCalibration)
+	{
 		BuildContinuousCalDisplay();
 	}
-	else {
+	else
+	{
 		auto state = LoadVRState();
 
 		ImGui::BeginDisabled(CalCtx.state == CalibrationState::Continuous);
@@ -71,9 +73,11 @@ void BuildMainWindow(bool runningInOverlay_)
 	ImGui::End();
 }
 
-void ShowVersionLine() {
+void ShowVersionLine()
+{
 	ImGui::SetNextWindowPos(ImVec2(10.0f, ImGui::GetWindowHeight() - ImGui::GetFrameHeightWithSpacing()));
-	if (!ImGui::BeginChild("bottom line", ImVec2(ImGui::GetWindowWidth() - 20.0f, ImGui::GetFrameHeightWithSpacing() * 2), false)) {
+	if (!ImGui::BeginChild("bottom line", ImVec2(ImGui::GetWindowWidth() - 20.0f, ImGui::GetFrameHeightWithSpacing() * 2), false))
+	{
 		ImGui::EndChild();
 		return;
 	}
@@ -81,7 +85,7 @@ void ShowVersionLine() {
 	if (runningInOverlay)
 	{
 		ImGui::SameLine();
-		ImGui::Text(u8"- ¹Ø±Õ VR µş¼Ó²ãÀ´Í¨¹ıÊó±ê²Ù¿Ø");
+		ImGui::Text(u8"- å…³é—­ VR å åŠ å±‚æ¥é€šè¿‡é¼ æ ‡æ“æ§");
 	}
 	ImGui::EndChild();
 }
@@ -89,13 +93,14 @@ void ShowVersionLine() {
 void CCal_BasicInfo();
 void CCal_DrawSettings();
 
-void BuildContinuousCalDisplay() {
+void BuildContinuousCalDisplay()
+{
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
 	ImGui::SetNextWindowSize(ImGui::GetWindowSize());
 	ImGui::SetNextWindowBgAlpha(1);
-	if (!ImGui::Begin(u8"Á¬ĞøĞ£×¼", nullptr,
-		bareWindowFlags & ~ImGuiWindowFlags_NoTitleBar
-	)) {
+	if (!ImGui::Begin(u8"è¿ç»­æ ¡å‡†", nullptr,
+										bareWindowFlags & ~ImGuiWindowFlags_NoTitleBar))
+	{
 		ImGui::End();
 		return;
 	}
@@ -104,23 +109,28 @@ void BuildContinuousCalDisplay() {
 	contentRegion.x = ImGui::GetWindowContentRegionWidth();
 	contentRegion.y = ImGui::GetWindowHeight() - ImGui::GetFrameHeightWithSpacing() * 2.1;
 
-	if (!ImGui::BeginChild("CCalDisplayFrame", contentRegion, false)) {
+	if (!ImGui::BeginChild("CCalDisplayFrame", contentRegion, false))
+	{
 		ImGui::EndChild();
 		return;
 	}
 
-	if (ImGui::BeginTabBar("CCalTabs", 0)) {
-		if (ImGui::BeginTabItem(u8"×´Ì¬")) {
+	if (ImGui::BeginTabBar("CCalTabs", 0))
+	{
+		if (ImGui::BeginTabItem(u8"çŠ¶æ€"))
+		{
 			CCal_BasicInfo();
 			ImGui::EndTabItem();
 		}
 
-		if (ImGui::BeginTabItem(u8"ÏêÏ¸ĞÅÏ¢")) {
+		if (ImGui::BeginTabItem(u8"è¯¦ç»†ä¿¡æ¯"))
+		{
 			ShowCalibrationDebug(2, 3);
 			ImGui::EndTabItem();
 		}
-		
-		if (ImGui::BeginTabItem(u8"ÉèÖÃ")) {
+
+		if (ImGui::BeginTabItem(u8"è®¾ç½®"))
+		{
 			CCal_DrawSettings();
 			ImGui::EndTabItem();
 		}
@@ -135,14 +145,18 @@ void BuildContinuousCalDisplay() {
 	ImGui::End();
 }
 
-static void ScaledDragFloat(const char* label, double& f, double scale, double min, double max, int flags = ImGuiSliderFlags_AlwaysClamp) {
-	float v = (float) (f * scale);
+static void ScaledDragFloat(const char *label, double &f, double scale, double min, double max, int flags = ImGuiSliderFlags_AlwaysClamp)
+{
+	float v = (float)(f * scale);
 	std::string labelStr = std::string(label);
 
 	// If starts with ##, just do a normal SliderFloat
-	if (labelStr.size() > 2 && labelStr[0] == '#' && labelStr[1] == '#') {
+	if (labelStr.size() > 2 && labelStr[0] == '#' && labelStr[1] == '#')
+	{
 		ImGui::SliderFloat(label, &v, (float)min, (float)max, "%1.2f", flags);
-	} else {
+	}
+	else
+	{
 		// Otherwise do funny
 		ImGui::Text(label);
 		ImGui::SameLine();
@@ -155,46 +169,46 @@ static void ScaledDragFloat(const char* label, double& f, double scale, double m
 		ImGui::SliderFloat((std::string("##") + label).c_str(), &v, (float)min, (float)max, "%1.2f", flags);
 		ImGui::PopID();
 	}
-	
+
 	f = v / scale;
 }
 
-void DrawVectorElement(std::string id, const char* text, double* value);
+void DrawVectorElement(std::string id, const char *text, double *value);
 
-void CCal_DrawSettings() {
+void CCal_DrawSettings()
+{
 
 	// panel size for boxes
-	ImVec2 panel_size { ImGui::GetWindowContentRegionMax().x - ImGui::GetWindowContentRegionMin().x, 0 };
+	ImVec2 panel_size{ImGui::GetWindowContentRegionMax().x - ImGui::GetWindowContentRegionMin().x, 0};
 
-	ImGui::BeginGroupPanel(u8"ÌáÊ¾", panel_size);
-	ImGui::Text(u8"½«Êó±êĞüÍ£ÔÚÉèÖÃÉÏÒÔÁË½â¸ü¶àĞÅÏ¢£¡");
+	ImGui::BeginGroupPanel(u8"æç¤º", panel_size);
+	ImGui::Text(u8"å°†é¼ æ ‡æ‚¬åœåœ¨è®¾ç½®ä¸Šä»¥äº†è§£æ›´å¤šä¿¡æ¯ï¼");
 	ImGui::EndGroupPanel();
-
 
 	// @TODO: Group in UI
 
 	// Section: Alignment speeds
 	{
-		ImGui::BeginGroupPanel(u8"Ğ£×¼ËÙ¶È", panel_size);
+		ImGui::BeginGroupPanel(u8"æ ¡å‡†é€Ÿåº¦", panel_size);
 
 		ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
 		ImGui::TextWrapped(
-			u8"¿Õ¼äĞ£×¼Æ÷ ÔÚ·¢ÉúÆ¯ÒÆÊ±Ê¹ÓÃ×î¶àÈıÖÖ²»Í¬µÄËÙ¶È½«Ğ£×¼ÍÏ»Øµ½ÕıÈ·Î»ÖÃ¡£ÕâĞ©ÉèÖÃ¿ØÖÆĞ£×¼Æ«Àë¶àÔ¶Ê±Ó¦Ñ¡ÔñÄÄÖÖĞ£×¼ËÙ¶È£¬¸üÂı£¨Decel£©»¹ÊÇ¸ü¿ì£¨Fast£©¡£"
-			//"»»ĞĞ"
+				u8"ç©ºé—´æ ¡å‡†å™¨ åœ¨å‘ç”Ÿæ¼‚ç§»æ—¶ä½¿ç”¨æœ€å¤šä¸‰ç§ä¸åŒçš„é€Ÿåº¦å°†æ ¡å‡†æ‹–å›åˆ°æ­£ç¡®ä½ç½®ã€‚è¿™äº›è®¾ç½®æ§åˆ¶æ ¡å‡†åç¦»å¤šè¿œæ—¶åº”é€‰æ‹©å“ªç§æ ¡å‡†é€Ÿåº¦ï¼Œæ›´æ…¢ï¼ˆDecelï¼‰è¿˜æ˜¯æ›´å¿«ï¼ˆFastï¼‰ã€‚"
+				//"æ¢è¡Œ"
 		);
 		ImGui::PopStyleColor();
 
-		if (ImGui::BeginTable("SpeedThresholds", 3, 0)) {
+		if (ImGui::BeginTable("SpeedThresholds", 3, 0))
+		{
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(1);
-			ImGui::Text(u8"Î»ÖÃ (mm)");
+			ImGui::Text(u8"ä½ç½® (mm)");
 			ImGui::TableSetColumnIndex(2);
-			ImGui::Text(u8"Ğı×ª (degrees)");
-
+			ImGui::Text(u8"æ—‹è½¬ (degrees)");
 
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0);
-			ImGui::Text(u8"¸üÂı");
+			ImGui::Text(u8"æ›´æ…¢");
 			ImGui::TableSetColumnIndex(1);
 			ScaledDragFloat("##TransDecel", CalCtx.alignmentSpeedParams.thr_trans_tiny, 1000.0, 0, 20.0);
 			ImGui::TableSetColumnIndex(2);
@@ -202,23 +216,23 @@ void CCal_DrawSettings() {
 
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0);
-			ImGui::Text(u8"Âı");
+			ImGui::Text(u8"æ…¢");
 			ImGui::TableSetColumnIndex(1);
 			ScaledDragFloat("##TransSlow", CalCtx.alignmentSpeedParams.thr_trans_small, 1000.0,
-				CalCtx.alignmentSpeedParams.thr_trans_tiny * 1000.0, 20.0);
+											CalCtx.alignmentSpeedParams.thr_trans_tiny * 1000.0, 20.0);
 			ImGui::TableSetColumnIndex(2);
 			ScaledDragFloat("##RotSlow", CalCtx.alignmentSpeedParams.thr_rot_small, 180.0 / EIGEN_PI,
-				CalCtx.alignmentSpeedParams.thr_rot_tiny * (180.0 / EIGEN_PI), 10.0);
+											CalCtx.alignmentSpeedParams.thr_rot_tiny * (180.0 / EIGEN_PI), 10.0);
 
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0);
-			ImGui::Text(u8"¿ì");
+			ImGui::Text(u8"å¿«");
 			ImGui::TableSetColumnIndex(1);
 			ScaledDragFloat("##TransFast", CalCtx.alignmentSpeedParams.thr_trans_large, 1000.0,
-				CalCtx.alignmentSpeedParams.thr_trans_small * 1000.0, 50.0);
+											CalCtx.alignmentSpeedParams.thr_trans_small * 1000.0, 50.0);
 			ImGui::TableSetColumnIndex(2);
 			ScaledDragFloat("##RotFast", CalCtx.alignmentSpeedParams.thr_rot_large, 180.0 / EIGEN_PI,
-				CalCtx.alignmentSpeedParams.thr_rot_small * (180.0 / EIGEN_PI), 20.0);
+											CalCtx.alignmentSpeedParams.thr_rot_small * (180.0 / EIGEN_PI), 20.0);
 
 			ImGui::EndTable();
 		}
@@ -228,49 +242,50 @@ void CCal_DrawSettings() {
 
 	// Section: Alignment speeds
 	{
-		ImGui::BeginGroupPanel(u8"¶ÔÆëËÙ¶È", panel_size);
+		ImGui::BeginGroupPanel(u8"å¯¹é½é€Ÿåº¦", panel_size);
 
 		// ImGui::Separator();
 		// ImGui::Text("Alignment speeds");
-		ScaledDragFloat(u8"¸üÂı", CalCtx.alignmentSpeedParams.align_speed_tiny, 1.0, 0, 2.0, 0);
-		ScaledDragFloat(u8"Âı", CalCtx.alignmentSpeedParams.align_speed_small, 1.0, 0, 2.0, 0);
-		ScaledDragFloat(u8"¿ì", CalCtx.alignmentSpeedParams.align_speed_large, 1.0, 0, 2.0, 0);
-		
+		ScaledDragFloat(u8"æ›´æ…¢", CalCtx.alignmentSpeedParams.align_speed_tiny, 1.0, 0, 2.0, 0);
+		ScaledDragFloat(u8"æ…¢", CalCtx.alignmentSpeedParams.align_speed_small, 1.0, 0, 2.0, 0);
+		ScaledDragFloat(u8"å¿«", CalCtx.alignmentSpeedParams.align_speed_large, 1.0, 0, 2.0, 0);
+
 		ImGui::EndGroupPanel();
 	}
-	
 
 	// Section: Continuous Calibration settings
 	{
-		ImGui::BeginGroupPanel(u8"Á¬ĞøĞ£×¼", panel_size);
+		ImGui::BeginGroupPanel(u8"è¿ç»­æ ¡å‡†", panel_size);
 
 		{
 			// @TODO: Reduce code duplication (tooltips)
 			// Recalibration threshold
-			ImGui::Text(u8"ÖØĞÂĞ£×¼´¥·¢ãĞÖµ");
+			ImGui::Text(u8"é‡æ–°æ ¡å‡†è§¦å‘é˜ˆå€¼");
 			ImGui::SameLine();
 			ImGui::PushID("recalibration_threshold");
 			ImGui::SliderFloat("##recalibration_threshold_slider", &CalCtx.continuousCalibrationThreshold, 1.01f, 10.0f, "%1.1f", 0);
-			if (ImGui::IsItemHovered(0)) {
-				ImGui::SetTooltip(u8"ÓÃÓÚµ÷ÕûÔÚÖØĞÂ¶ÔÆë¸ú×ÙÆ÷Ö®Ç°£¬Ğ£×¼±ØĞë´ïµ½µÄ×¼È·¶È¡£\n"
-					u8"¸ü¸ßµÄÖµ»á½µµÍĞ£×¼·¢ÉúµÄÆµÂÊ£¬Õâ¿ÉÄÜ¶Ô¾ßÓĞ½Ï´ó¸ú×ÙÆ¯ÒÆµÄÏµÍ³ÓĞ°ïÖú¡£");
+			if (ImGui::IsItemHovered(0))
+			{
+				ImGui::SetTooltip(u8"ç”¨äºè°ƒæ•´åœ¨é‡æ–°å¯¹é½è·Ÿè¸ªå™¨ä¹‹å‰ï¼Œæ ¡å‡†å¿…é¡»è¾¾åˆ°çš„å‡†ç¡®åº¦ã€‚\n"
+													u8"æ›´é«˜çš„å€¼ä¼šé™ä½æ ¡å‡†å‘ç”Ÿçš„é¢‘ç‡ï¼Œè¿™å¯èƒ½å¯¹å…·æœ‰è¾ƒå¤§è·Ÿè¸ªæ¼‚ç§»çš„ç³»ç»Ÿæœ‰å¸®åŠ©ã€‚");
 			}
 			ImGui::PopID();
 
 			ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
-			ImGui::TextWrapped(u8"¿ØÖÆ ¿Õ¼äĞ£×¼Æ÷ Í¬²½ÓÎÏ·¿Õ¼äµÄÆµÂÊ¡£");
+			ImGui::TextWrapped(u8"æ§åˆ¶ ç©ºé—´æ ¡å‡†å™¨ åŒæ­¥æ¸¸æˆç©ºé—´çš„é¢‘ç‡ã€‚");
 			ImGui::PopStyleColor();
-			if (ImGui::IsItemHovered(0)) {
-				ImGui::SetTooltip(u8"ÓÃÓÚµ÷ÕûÔÚÖØĞÂ¶ÔÆë¸ú×ÙÆ÷Ö®Ç°£¬Ğ£×¼±ØĞë´ïµ½µÄ×¼È·¶È¡£\n"
-					u8"¸ü¸ßµÄÖµ»á½µµÍĞ£×¼·¢ÉúµÄÆµÂÊ£¬Õâ¿ÉÄÜ¶Ô¾ßÓĞ½Ï´ó¸ú×ÙÆ¯ÒÆµÄÏµÍ³ÓĞ°ïÖú¡£");
+			if (ImGui::IsItemHovered(0))
+			{
+				ImGui::SetTooltip(u8"ç”¨äºè°ƒæ•´åœ¨é‡æ–°å¯¹é½è·Ÿè¸ªå™¨ä¹‹å‰ï¼Œæ ¡å‡†å¿…é¡»è¾¾åˆ°çš„å‡†ç¡®åº¦ã€‚\n"
+													u8"æ›´é«˜çš„å€¼ä¼šé™ä½æ ¡å‡†å‘ç”Ÿçš„é¢‘ç‡ï¼Œè¿™å¯èƒ½å¯¹å…·æœ‰è¾ƒå¤§è·Ÿè¸ªæ¼‚ç§»çš„ç³»ç»Ÿæœ‰å¸®åŠ©ã€‚");
 			}
 		}
 
 		{
 			// Tracker offset
 			// ImVec2 panel_size_inner { ImGui::GetCurrentWindow()->DC.ItemWidth, 0};
-			ImVec2 panel_size_inner { panel_size.x - 11 * 2, 0};
-			ImGui::BeginGroupPanel(u8"×·×ÙÆ÷Æ«ÒÆ", panel_size_inner);
+			ImVec2 panel_size_inner{panel_size.x - 11 * 2, 0};
+			ImGui::BeginGroupPanel(u8"è¿½è¸ªå™¨åç§»", panel_size_inner);
 			DrawVectorElement("cc_tracker_offset", "X", &CalCtx.continuousCalibrationOffset.x());
 			DrawVectorElement("cc_tracker_offset", "Y", &CalCtx.continuousCalibrationOffset.y());
 			DrawVectorElement("cc_tracker_offset", "Z", &CalCtx.continuousCalibrationOffset.z());
@@ -279,9 +294,9 @@ void CCal_DrawSettings() {
 
 		{
 			// Playspace offset
-			ImVec2 panel_size_inner{ panel_size.x - 11 * 2, 0 };
-			ImGui::BeginGroupPanel(u8"ÓÎÍæ¿Õ¼äËõ·Å", panel_size_inner);
-			DrawVectorElement("cc_playspace_scale", u8"ÓÎÍæ¿Õ¼äËõ·Å", &CalCtx.calibratedScale);
+			ImVec2 panel_size_inner{panel_size.x - 11 * 2, 0};
+			ImGui::BeginGroupPanel(u8"æ¸¸ç©ç©ºé—´ç¼©æ”¾", panel_size_inner);
+			DrawVectorElement("cc_playspace_scale", u8"æ¸¸ç©ç©ºé—´ç¼©æ”¾", &CalCtx.calibratedScale);
 			ImGui::EndGroupPanel();
 		}
 
@@ -290,7 +305,8 @@ void CCal_DrawSettings() {
 
 	ImGui::NewLine();
 	ImGui::Indent();
-	if (ImGui::Button(u8"ÖØÖÃÉèÖÃ")) {
+	if (ImGui::Button(u8"é‡ç½®è®¾ç½®"))
+	{
 		CalCtx.ResetConfig();
 	}
 	ImGui::Unindent();
@@ -298,7 +314,7 @@ void CCal_DrawSettings() {
 
 	// Section: Contributors credits
 	{
-		ImGui::BeginGroupPanel("×÷Õß", panel_size);
+		ImGui::BeginGroupPanel("ä½œè€…", panel_size);
 
 		ImGui::TextDisabled("tach");
 		ImGui::TextDisabled("pushrax");
@@ -311,7 +327,8 @@ void CCal_DrawSettings() {
 	}
 }
 
-void DrawVectorElement(std::string id, const char* text, double* value) {
+void DrawVectorElement(std::string id, const char *text, double *value)
+{
 	constexpr float CONTINUOUS_CALIBRATION_TRACKER_OFFSET_DELTA = 0.01f;
 
 	ImGui::Text(text);
@@ -319,12 +336,14 @@ void DrawVectorElement(std::string id, const char* text, double* value) {
 	ImGui::SameLine();
 
 	ImGui::PushID((id + text + "_btn_reset").c_str());
-	if (ImGui::Button(" 0 ")) {
+	if (ImGui::Button(" 0 "))
+	{
 		*value *= 0;
 	}
 	ImGui::PopID();
 	ImGui::SameLine();
-	if (ImGui::ArrowButton((id + text + "_decrease").c_str(), ImGuiDir_Down)) {
+	if (ImGui::ArrowButton((id + text + "_decrease").c_str(), ImGuiDir_Down))
+	{
 		*value -= CONTINUOUS_CALIBRATION_TRACKER_OFFSET_DELTA;
 	}
 	ImGui::SameLine();
@@ -334,59 +353,66 @@ void DrawVectorElement(std::string id, const char* text, double* value) {
 	ImGui::PopID();
 	ImGui::PopItemWidth();
 	ImGui::SameLine();
-	if (ImGui::ArrowButton((id + text + "_increase").c_str(), ImGuiDir_Up)) {
+	if (ImGui::ArrowButton((id + text + "_increase").c_str(), ImGuiDir_Up))
+	{
 		*value += CONTINUOUS_CALIBRATION_TRACKER_OFFSET_DELTA;
 	}
 }
 
-void CCal_BasicInfo() {
-	if (ImGui::BeginTable("DeviceInfo", 2, 0)) {
-		ImGui::TableSetupColumn(u8"Ö÷Éè±¸");
-		ImGui::TableSetupColumn(u8"Ä¿±êÉè±¸");
+void CCal_BasicInfo()
+{
+	if (ImGui::BeginTable("DeviceInfo", 2, 0))
+	{
+		ImGui::TableSetupColumn(u8"ä¸»è®¾å¤‡");
+		ImGui::TableSetupColumn(u8"ç›®æ ‡è®¾å¤‡");
 		ImGui::TableHeadersRow();
 
 		ImGui::TableNextRow();
 		ImGui::TableSetColumnIndex(0);
 		ImGui::BeginGroup();
 		ImGui::Text("%s / %s / %s",
-			CalCtx.referenceStandby.trackingSystem.c_str(),
-			CalCtx.referenceStandby.model.c_str(),
-			CalCtx.referenceStandby.serial.c_str()
-		);
-		const char* status;
-		if (CalCtx.referenceID < 0) {
+								CalCtx.referenceStandby.trackingSystem.c_str(),
+								CalCtx.referenceStandby.model.c_str(),
+								CalCtx.referenceStandby.serial.c_str());
+		const char *status;
+		if (CalCtx.referenceID < 0)
+		{
 			ImGui::TableSetBgColor(ImGuiTableBgTarget_CellBg, 0xFF000080);
-			status = u8"Î´Á¬½Ó";
+			status = u8"æœªè¿æ¥";
 		}
-		else if (!CalCtx.ReferencePoseIsValid()) {
+		else if (!CalCtx.ReferencePoseIsValid())
+		{
 			ImGui::TableSetBgColor(ImGuiTableBgTarget_CellBg, 0xFFFF0080);
-			status = u8"Î´ÔÚ×·×Ù";
+			status = u8"æœªåœ¨è¿½è¸ª";
 		}
-		else {
-			status = u8"×¼±¸¾ÍĞ÷";
+		else
+		{
+			status = u8"å‡†å¤‡å°±ç»ª";
 		}
-		ImGui::Text(u8"×´Ì¬£º %s", status);
+		ImGui::Text(u8"çŠ¶æ€ï¼š %s", status);
 		ImGui::EndGroup();
 
 		ImGui::TableSetColumnIndex(1);
 		ImGui::BeginGroup();
 		ImGui::Text("%s / %s / %s",
-			CalCtx.targetStandby.trackingSystem.c_str(),
-			CalCtx.targetStandby.model.c_str(),
-			CalCtx.targetStandby.serial.c_str()
-		);
-		if (CalCtx.targetID < 0) {
+								CalCtx.targetStandby.trackingSystem.c_str(),
+								CalCtx.targetStandby.model.c_str(),
+								CalCtx.targetStandby.serial.c_str());
+		if (CalCtx.targetID < 0)
+		{
 			ImGui::TableSetBgColor(ImGuiTableBgTarget_CellBg, 0xFF000080);
-			status = u8"Î´Á¬½Ó";
+			status = u8"æœªè¿æ¥";
 		}
-		else if (!CalCtx.TargetPoseIsValid()) {
+		else if (!CalCtx.TargetPoseIsValid())
+		{
 			ImGui::TableSetBgColor(ImGuiTableBgTarget_CellBg, 0xFFFF0080);
-			status = u8"Î´ÔÚ×·×Ù";
+			status = u8"æœªåœ¨è¿½è¸ª";
 		}
-		else {
-			status = u8"×¼±¸¾ÍĞ÷";
+		else
+		{
+			status = u8"å‡†å¤‡å°±ç»ª";
 		}
-		ImGui::Text(u8"×´Ì¬£º %s", status);
+		ImGui::Text(u8"çŠ¶æ€ï¼š %s", status);
 		ImGui::EndGroup();
 
 		ImGui::EndTable();
@@ -394,21 +420,26 @@ void CCal_BasicInfo() {
 
 	float width = ImGui::GetWindowContentRegionWidth(), scale = 1.0f;
 
-	if (ImGui::BeginTable("##CCal_Cancel", Metrics::enableLogs ? 3 : 2, 0, ImVec2(width * scale, ImGui::GetTextLineHeight() * 2))) {
+	if (ImGui::BeginTable("##CCal_Cancel", Metrics::enableLogs ? 3 : 2, 0, ImVec2(width * scale, ImGui::GetTextLineHeight() * 2)))
+	{
 		ImGui::TableNextRow();
 		ImGui::TableSetColumnIndex(0);
-		if (ImGui::Button(u8"È¡ÏûÁ¬ĞøĞ£×¼", ImVec2(-FLT_MIN, 0.0f))) {
+		if (ImGui::Button(u8"å–æ¶ˆè¿ç»­æ ¡å‡†", ImVec2(-FLT_MIN, 0.0f)))
+		{
 			EndContinuousCalibration();
 		}
 
 		ImGui::TableSetColumnIndex(1);
-		if (ImGui::Button(u8"µ÷ÊÔ£ºÇ¿ÖÆÖØÖÃĞ£×¼", ImVec2(-FLT_MIN, 0.0f))) {
+		if (ImGui::Button(u8"è°ƒè¯•ï¼šå¼ºåˆ¶é‡ç½®æ ¡å‡†", ImVec2(-FLT_MIN, 0.0f)))
+		{
 			DebugApplyRandomOffset();
 		}
 
-		if (Metrics::enableLogs) {
+		if (Metrics::enableLogs)
+		{
 			ImGui::TableSetColumnIndex(2);
-			if (ImGui::Button(u8"µ÷ÊÔ£º±ê¼ÇÈÕÖ¾", ImVec2(-FLT_MIN, 0.0f))) {
+			if (ImGui::Button(u8"è°ƒè¯•ï¼šæ ‡è®°æ—¥å¿—", ImVec2(-FLT_MIN, 0.0f)))
+			{
 				Metrics::WriteLogAnnotation("MARK LOGS");
 			}
 		}
@@ -416,22 +447,24 @@ void CCal_BasicInfo() {
 		ImGui::EndTable();
 	}
 
-	ImGui::Checkbox(u8"Òş²Ø»ì´î×·×ÙÆ÷", &CalCtx.quashTargetInContinuous);
+	ImGui::Checkbox(u8"éšè—æ··æ­è¿½è¸ªå™¨", &CalCtx.quashTargetInContinuous);
 	ImGui::SameLine();
-	ImGui::Checkbox(u8"±£³Ö×Ô¶¯Ğ£×¼", &CalCtx.enableStaticRecalibration);
+	ImGui::Checkbox(u8"ä¿æŒè‡ªåŠ¨æ ¡å‡†", &CalCtx.enableStaticRecalibration);
 	ImGui::SameLine();
-	ImGui::Checkbox(u8"Êä³öÈÕÖ¾", &Metrics::enableLogs);
+	ImGui::Checkbox(u8"è¾“å‡ºæ—¥å¿—", &Metrics::enableLogs);
 	ImGui::SameLine();
-	ImGui::Checkbox(u8"Ëø¶¨Ïà¶ÔÎ»ÖÃ", &CalCtx.lockRelativePosition);
+	ImGui::Checkbox(u8"é”å®šç›¸å¯¹ä½ç½®", &CalCtx.lockRelativePosition);
 	ImGui::SameLine();
-	ImGui::Checkbox(u8"°´×¡×óÓÒ°â»ú¼ÌĞøĞ£×¼", &CalCtx.requireTriggerPressToApply);
+	ImGui::Checkbox(u8"æŒ‰ä½å·¦å³æ‰³æœºç»§ç»­æ ¡å‡†", &CalCtx.requireTriggerPressToApply);
 
 	// Status field...
 
 	ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 1));
 
-	for (const auto& msg : CalCtx.messages) {
-		if (msg.type == CalibrationContext::Message::String) {
+	for (const auto &msg : CalCtx.messages)
+	{
+		if (msg.type == CalibrationContext::Message::String)
+		{
 			ImGui::TextWrapped("> %s", msg.str.c_str());
 		}
 	}
@@ -451,7 +484,7 @@ void BuildMenu(bool runningInOverlay)
 	{
 		if (CalCtx.validProfile && !CalCtx.enabled)
 		{
-			ImGui::TextColored(ImVec4(0.8f, 0.2f, 0.2f, 1), u8"Ö÷ÒªÍ·´÷Éè±¸ (%s) Î´ÕÒµ½£¬ÅäÖÃÎÄ¼şÒÑ½ûÓÃ", CalCtx.referenceTrackingSystem.c_str());
+			ImGui::TextColored(ImVec4(0.8f, 0.2f, 0.2f, 1), u8"ä¸»è¦å¤´æˆ´è®¾å¤‡ (%s) æœªæ‰¾åˆ°ï¼Œé…ç½®æ–‡ä»¶å·²ç¦ç”¨", CalCtx.referenceTrackingSystem.c_str());
 			ImGui::Text("");
 		}
 
@@ -462,27 +495,28 @@ void BuildMenu(bool runningInOverlay)
 			scale = 1.0f / 4.0f;
 		}
 
-		if (ImGui::Button(u8"¿ªÊ¼Ğ£×¼", ImVec2(width * scale, ImGui::GetTextLineHeight() * 2)))
+		if (ImGui::Button(u8"å¼€å§‹æ ¡å‡†", ImVec2(width * scale, ImGui::GetTextLineHeight() * 2)))
 		{
 			ImGui::OpenPopup("Calibration Progress");
 			StartCalibration();
 		}
 
 		ImGui::SameLine();
-		if (ImGui::Button(u8"Á¬ĞøĞ£×¼", ImVec2(width * scale, ImGui::GetTextLineHeight() * 2))) {
+		if (ImGui::Button(u8"è¿ç»­æ ¡å‡†", ImVec2(width * scale, ImGui::GetTextLineHeight() * 2)))
+		{
 			StartContinuousCalibration();
 		}
 
 		if (CalCtx.validProfile)
 		{
 			ImGui::SameLine();
-			if (ImGui::Button(u8"±à¼­Ğ£×¼", ImVec2(width * scale, ImGui::GetTextLineHeight() * 2)))
+			if (ImGui::Button(u8"ç¼–è¾‘æ ¡å‡†", ImVec2(width * scale, ImGui::GetTextLineHeight() * 2)))
 			{
 				CalCtx.state = CalibrationState::Editing;
 			}
 
 			ImGui::SameLine();
-			if (ImGui::Button(u8"Çå³ıĞ£×¼", ImVec2(width * scale, ImGui::GetTextLineHeight() * 2)))
+			if (ImGui::Button(u8"æ¸…é™¤æ ¡å‡†", ImVec2(width * scale, ImGui::GetTextLineHeight() * 2)))
 			{
 				CalCtx.Clear();
 				SaveProfile(CalCtx);
@@ -498,7 +532,7 @@ void BuildMenu(bool runningInOverlay)
 		}
 
 		ImGui::Text("");
-		if (ImGui::Button(u8"½« Chaperone ±ß½çĞÅÏ¢¸´ÖÆµ½ÅäÖÃÎÄ¼ş", ImVec2(width * scale, ImGui::GetTextLineHeight() * 2)))
+		if (ImGui::Button(u8"å°† Chaperone è¾¹ç•Œä¿¡æ¯å¤åˆ¶åˆ°é…ç½®æ–‡ä»¶", ImVec2(width * scale, ImGui::GetTextLineHeight() * 2)))
 		{
 			LoadChaperoneBounds();
 			SaveProfile(CalCtx);
@@ -507,12 +541,12 @@ void BuildMenu(bool runningInOverlay)
 		if (CalCtx.chaperone.valid)
 		{
 			ImGui::SameLine();
-			if (ImGui::Button(u8"Õ³Ìù Chaperone ±ß½ç", ImVec2(width * scale, ImGui::GetTextLineHeight() * 2)))
+			if (ImGui::Button(u8"ç²˜è´´ Chaperone è¾¹ç•Œ", ImVec2(width * scale, ImGui::GetTextLineHeight() * 2)))
 			{
 				ApplyChaperoneBounds();
 			}
 
-			if (ImGui::Checkbox(u8" ÔÚ¼¸ºÎÌåÖØÖÃÊ±×Ô¶¯Õ³Ìù Chaperone ±ß½ç", &CalCtx.chaperone.autoApply))
+			if (ImGui::Checkbox(u8" åœ¨å‡ ä½•ä½“é‡ç½®æ—¶è‡ªåŠ¨ç²˜è´´ Chaperone è¾¹ç•Œ", &CalCtx.chaperone.autoApply))
 			{
 				SaveProfile(CalCtx);
 			}
@@ -522,18 +556,18 @@ void BuildMenu(bool runningInOverlay)
 		auto speed = CalCtx.calibrationSpeed;
 
 		ImGui::Columns(4, NULL, false);
-		ImGui::Text(u8"Ğ£×¼ËÙ¶È");
+		ImGui::Text(u8"æ ¡å‡†é€Ÿåº¦");
 
 		ImGui::NextColumn();
-		if (ImGui::RadioButton(u8" ¿ì           ", speed == CalibrationContext::FAST))
+		if (ImGui::RadioButton(u8" å¿«           ", speed == CalibrationContext::FAST))
 			CalCtx.calibrationSpeed = CalibrationContext::FAST;
 
 		ImGui::NextColumn();
-		if (ImGui::RadioButton(u8" Âı           ", speed == CalibrationContext::SLOW))
+		if (ImGui::RadioButton(u8" æ…¢           ", speed == CalibrationContext::SLOW))
 			CalCtx.calibrationSpeed = CalibrationContext::SLOW;
 
 		ImGui::NextColumn();
-		if (ImGui::RadioButton(u8" ³¬Âı     ", speed == CalibrationContext::VERY_SLOW))
+		if (ImGui::RadioButton(u8" è¶…æ…¢     ", speed == CalibrationContext::VERY_SLOW))
 			CalCtx.calibrationSpeed = CalibrationContext::VERY_SLOW;
 
 		ImGui::Columns(1);
@@ -542,7 +576,7 @@ void BuildMenu(bool runningInOverlay)
 	{
 		BuildProfileEditor();
 
-		if (ImGui::Button(u8"±£´æÅäÖÃÎÄ¼ş", ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeight() * 2)))
+		if (ImGui::Button(u8"ä¿å­˜é…ç½®æ–‡ä»¶", ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeight() * 2)))
 		{
 			SaveProfile(CalCtx);
 			CalCtx.state = CalibrationState::None;
@@ -550,7 +584,7 @@ void BuildMenu(bool runningInOverlay)
 	}
 	else
 	{
-		ImGui::Button("Ğ£×¼½øĞĞÖĞ...", ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeight() * 2));
+		ImGui::Button("æ ¡å‡†è¿›è¡Œä¸­...", ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeight() * 2));
 	}
 
 	ImGui::SetNextWindowPos(ImVec2(20.0f, 20.0f), ImGuiCond_Always);
@@ -598,9 +632,9 @@ void BuildSystemSelection(const VRState &state)
 	ImGuiStyle &style = ImGui::GetStyle();
 	float paneWidth = ImGui::GetWindowContentRegionWidth() / 2 - style.FramePadding.x;
 
-	TextWithWidth("ReferenceSystemLabel", u8"Ö÷Éè±¸", paneWidth);
+	TextWithWidth("ReferenceSystemLabel", u8"ä¸»è®¾å¤‡", paneWidth);
 	ImGui::SameLine();
-	TextWithWidth("TargetSystemLabel", u8"Ä¿±êÉè±¸", paneWidth);
+	TextWithWidth("TargetSystemLabel", u8"ç›®æ ‡è®¾å¤‡", paneWidth);
 
 	int currentReferenceSystem = -1;
 	int currentTargetSystem = -1;
@@ -611,46 +645,53 @@ void BuildSystemSelection(const VRState &state)
 	{
 		if (str == CalCtx.referenceTrackingSystem)
 		{
-			currentReferenceSystem = (int) referenceSystems.size();
+			currentReferenceSystem = (int)referenceSystems.size();
 		}
 		else if (firstReferenceSystemNotTargetSystem == -1 && str != CalCtx.targetTrackingSystem)
 		{
-			firstReferenceSystemNotTargetSystem = (int) referenceSystems.size();
+			firstReferenceSystemNotTargetSystem = (int)referenceSystems.size();
 		}
 		referenceSystems.push_back(str.c_str());
 	}
 
 	if (currentReferenceSystem == -1 && CalCtx.referenceTrackingSystem == "")
 	{
-		if (CalCtx.state == CalibrationState::ContinuousStandby) {
+		if (CalCtx.state == CalibrationState::ContinuousStandby)
+		{
 			auto iter = std::find(state.trackingSystems.begin(), state.trackingSystems.end(), CalCtx.referenceStandby.trackingSystem);
-			if (iter != state.trackingSystems.end()) {
+			if (iter != state.trackingSystems.end())
+			{
 				currentReferenceSystem = iter - state.trackingSystems.begin();
 			}
 		}
-		else {
+		else
+		{
 			currentReferenceSystem = firstReferenceSystemNotTargetSystem;
 		}
 	}
 
 	ImGui::PushItemWidth(paneWidth);
-	ImGui::Combo("##ReferenceTrackingSystem", &currentReferenceSystem, &referenceSystems[0], (int) referenceSystems.size());
+	ImGui::Combo("##ReferenceTrackingSystem", &currentReferenceSystem, &referenceSystems[0], (int)referenceSystems.size());
 
-	if (currentReferenceSystem != -1 && currentReferenceSystem < (int) referenceSystems.size())
+	if (currentReferenceSystem != -1 && currentReferenceSystem < (int)referenceSystems.size())
 	{
 		CalCtx.referenceTrackingSystem = std::string(referenceSystems[currentReferenceSystem]);
 		if (CalCtx.referenceTrackingSystem == CalCtx.targetTrackingSystem)
 			CalCtx.targetTrackingSystem = "";
 	}
 
-	if (CalCtx.targetTrackingSystem == "") {
-		if (CalCtx.state == CalibrationState::ContinuousStandby) {
+	if (CalCtx.targetTrackingSystem == "")
+	{
+		if (CalCtx.state == CalibrationState::ContinuousStandby)
+		{
 			auto iter = std::find(state.trackingSystems.begin(), state.trackingSystems.end(), CalCtx.targetStandby.trackingSystem);
-			if (iter != state.trackingSystems.end()) {
+			if (iter != state.trackingSystems.end())
+			{
 				currentTargetSystem = iter - state.trackingSystems.begin();
 			}
 		}
-		else {
+		else
+		{
 			currentTargetSystem = 0;
 		}
 	}
@@ -661,13 +702,13 @@ void BuildSystemSelection(const VRState &state)
 		if (str != CalCtx.referenceTrackingSystem)
 		{
 			if (str != "" && str == CalCtx.targetTrackingSystem)
-				currentTargetSystem = (int) targetSystems.size();
+				currentTargetSystem = (int)targetSystems.size();
 			targetSystems.push_back(str.c_str());
 		}
 	}
 
 	ImGui::SameLine();
-	ImGui::Combo("##TargetTrackingSystem", &currentTargetSystem, &targetSystems[0], (int) targetSystems.size());
+	ImGui::Combo("##TargetTrackingSystem", &currentTargetSystem, &targetSystems[0], (int)targetSystems.size());
 
 	if (currentTargetSystem != -1 && currentTargetSystem < targetSystems.size())
 	{
@@ -704,7 +745,8 @@ std::string LabelString(const VRDevice &device)
 	return label;
 }
 
-std::string LabelString(const StandbyDevice& device) {
+std::string LabelString(const StandbyDevice &device)
+{
 	std::string label("< ");
 
 	label += device.model;
@@ -717,7 +759,7 @@ std::string LabelString(const StandbyDevice& device) {
 void BuildDeviceSelection(const VRState &state, int &initialSelected, const std::string &system, StandbyDevice &standbyDevice)
 {
 	int selected = initialSelected;
-	ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1), u8"Éè±¸ÀàĞÍ£º %s", system.c_str());
+	ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1), u8"è®¾å¤‡ç±»å‹ï¼š %s", system.c_str());
 
 	if (selected != -1)
 	{
@@ -757,33 +799,38 @@ void BuildDeviceSelection(const VRState &state, int &initialSelected, const std:
 			}
 		}
 
-		if (selected == -1) {
-			for (auto& device : state.devices)
+		if (selected == -1)
+		{
+			for (auto &device : state.devices)
 			{
 				if (device.trackingSystem != system)
 					continue;
-				
+
 				selected = device.id;
 				break;
 			}
 		}
 	}
 
-	if (selected == -1 && standby) {
+	if (selected == -1 && standby)
+	{
 		bool present = false;
-		for (auto& device : state.devices)
+		for (auto &device : state.devices)
 		{
 			if (device.trackingSystem != system)
 				continue;
 
-			if (standbyDevice.model != device.model) continue;
-			if (standbyDevice.serial != device.serial) continue;
+			if (standbyDevice.model != device.model)
+				continue;
+			if (standbyDevice.serial != device.serial)
+				continue;
 
 			present = true;
 			break;
 		}
 
-		if (!present) {
+		if (!present)
+		{
 			auto label = LabelString(standbyDevice);
 			ImGui::Selectable(label.c_str(), true);
 		}
@@ -795,13 +842,17 @@ void BuildDeviceSelection(const VRState &state, int &initialSelected, const std:
 			continue;
 
 		auto label = LabelString(device);
-		if (ImGui::Selectable(label.c_str(), selected == device.id)) {
+		if (ImGui::Selectable(label.c_str(), selected == device.id))
+		{
 			selected = device.id;
 		}
 	}
-	if (selected != initialSelected) {
-		const auto& device = std::find_if(state.devices.begin(), state.devices.end(), [&](const auto& d) { return d.id == selected; });
-		if (device == state.devices.end()) return;
+	if (selected != initialSelected)
+	{
+		const auto &device = std::find_if(state.devices.begin(), state.devices.end(), [&](const auto &d)
+																			{ return d.id == selected; });
+		if (device == state.devices.end())
+			return;
 
 		initialSelected = selected;
 		standbyDevice.trackingSystem = system;
@@ -825,7 +876,7 @@ void BuildDeviceSelections(const VRState &state)
 	BuildDeviceSelection(state, CalCtx.targetID, CalCtx.targetTrackingSystem, CalCtx.targetStandby);
 	ImGui::EndChild();
 
-	if (ImGui::Button(u8"±êÊ¶Ñ¡¶¨µÄÉè±¸£¨LEDÉÁË¸»òÕñ¶¯£©", ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing() + 4.0f)))
+	if (ImGui::Button(u8"æ ‡è¯†é€‰å®šçš„è®¾å¤‡ï¼ˆLEDé—ªçƒæˆ–æŒ¯åŠ¨ï¼‰", ImVec2(ImGui::GetWindowContentRegionWidth(), ImGui::GetTextLineHeightWithSpacing() + 4.0f)))
 	{
 		for (unsigned i = 0; i < 100; ++i)
 		{
@@ -836,20 +887,24 @@ void BuildDeviceSelections(const VRState &state)
 	}
 }
 
-VRState LoadVRState() {
+VRState LoadVRState()
+{
 	VRState state = VRState::Load();
-	auto& trackingSystems = state.trackingSystems;
+	auto &trackingSystems = state.trackingSystems;
 
 	// Inject entries for continuous calibration targets which have yet to load
 
-	if (CalCtx.state == CalibrationState::ContinuousStandby) {
+	if (CalCtx.state == CalibrationState::ContinuousStandby)
+	{
 		auto existing = std::find(trackingSystems.begin(), trackingSystems.end(), CalCtx.referenceTrackingSystem);
-		if (existing == trackingSystems.end()) {
+		if (existing == trackingSystems.end())
+		{
 			trackingSystems.push_back(CalCtx.referenceTrackingSystem);
 		}
 
 		existing = std::find(trackingSystems.begin(), trackingSystems.end(), CalCtx.targetTrackingSystem);
-		if (existing == trackingSystems.end()) {
+		if (existing == trackingSystems.end())
+		{
 			trackingSystems.push_back(CalCtx.targetTrackingSystem);
 		}
 	}
@@ -900,4 +955,3 @@ void TextWithWidth(const char *label, const char *text, float width)
 	ImGui::Text(text);
 	ImGui::EndChild();
 }
-
