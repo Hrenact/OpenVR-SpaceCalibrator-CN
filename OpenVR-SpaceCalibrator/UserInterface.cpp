@@ -202,7 +202,7 @@ void CCal_DrawSettings() {
 
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0);
-			ImGui::Text(u8"慢速");
+			ImGui::Text(u8"慢");
 			ImGui::TableSetColumnIndex(1);
 			ScaledDragFloat("##TransSlow", CalCtx.alignmentSpeedParams.thr_trans_small, 1000.0,
 				CalCtx.alignmentSpeedParams.thr_trans_tiny * 1000.0, 20.0);
@@ -212,7 +212,7 @@ void CCal_DrawSettings() {
 
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0);
-			ImGui::Text(u8"更快");
+			ImGui::Text(u8"快");
 			ImGui::TableSetColumnIndex(1);
 			ScaledDragFloat("##TransFast", CalCtx.alignmentSpeedParams.thr_trans_large, 1000.0,
 				CalCtx.alignmentSpeedParams.thr_trans_small * 1000.0, 50.0);
@@ -233,8 +233,8 @@ void CCal_DrawSettings() {
 		// ImGui::Separator();
 		// ImGui::Text("Alignment speeds");
 		ScaledDragFloat(u8"更慢", CalCtx.alignmentSpeedParams.align_speed_tiny, 1.0, 0, 2.0, 0);
-		ScaledDragFloat(u8"慢速", CalCtx.alignmentSpeedParams.align_speed_small, 1.0, 0, 2.0, 0);
-		ScaledDragFloat(u8"更快", CalCtx.alignmentSpeedParams.align_speed_large, 1.0, 0, 2.0, 0);
+		ScaledDragFloat(u8"慢", CalCtx.alignmentSpeedParams.align_speed_small, 1.0, 0, 2.0, 0);
+		ScaledDragFloat(u8"快", CalCtx.alignmentSpeedParams.align_speed_large, 1.0, 0, 2.0, 0);
 		
 		ImGui::EndGroupPanel();
 	}
@@ -247,7 +247,7 @@ void CCal_DrawSettings() {
 		{
 			// @TODO: Reduce code duplication (tooltips)
 			// Recalibration threshold
-			ImGui::Text(u8"重新校准阈值");
+			ImGui::Text(u8"重新校准触发阈值");
 			ImGui::SameLine();
 			ImGui::PushID("recalibration_threshold");
 			ImGui::SliderFloat("##recalibration_threshold_slider", &CalCtx.continuousCalibrationThreshold, 1.01f, 10.0f, "%1.1f", 0);
@@ -356,7 +356,7 @@ void CCal_BasicInfo() {
 		const char* status;
 		if (CalCtx.referenceID < 0) {
 			ImGui::TableSetBgColor(ImGuiTableBgTarget_CellBg, 0xFF000080);
-			status = u8"未找到";
+			status = u8"未连接";
 		}
 		else if (!CalCtx.ReferencePoseIsValid()) {
 			ImGui::TableSetBgColor(ImGuiTableBgTarget_CellBg, 0xFFFF0080);
@@ -377,7 +377,7 @@ void CCal_BasicInfo() {
 		);
 		if (CalCtx.targetID < 0) {
 			ImGui::TableSetBgColor(ImGuiTableBgTarget_CellBg, 0xFF000080);
-			status = u8"未找到";
+			status = u8"未连接";
 		}
 		else if (!CalCtx.TargetPoseIsValid()) {
 			ImGui::TableSetBgColor(ImGuiTableBgTarget_CellBg, 0xFFFF0080);
@@ -402,7 +402,7 @@ void CCal_BasicInfo() {
 		}
 
 		ImGui::TableSetColumnIndex(1);
-		if (ImGui::Button(u8"调试：强制中断校准", ImVec2(-FLT_MIN, 0.0f))) {
+		if (ImGui::Button(u8"调试：强制重置校准", ImVec2(-FLT_MIN, 0.0f))) {
 			DebugApplyRandomOffset();
 		}
 
@@ -416,15 +416,15 @@ void CCal_BasicInfo() {
 		ImGui::EndTable();
 	}
 
-	ImGui::Checkbox(u8"隐藏追踪器", &CalCtx.quashTargetInContinuous);
+	ImGui::Checkbox(u8"隐藏混搭追踪器", &CalCtx.quashTargetInContinuous);
 	ImGui::SameLine();
-	ImGui::Checkbox(u8"静态重新校准", &CalCtx.enableStaticRecalibration);
+	ImGui::Checkbox(u8"保持自动校准", &CalCtx.enableStaticRecalibration);
 	ImGui::SameLine();
-	ImGui::Checkbox(u8"开启调试日志", &Metrics::enableLogs);
+	ImGui::Checkbox(u8"输出日志", &Metrics::enableLogs);
 	ImGui::SameLine();
 	ImGui::Checkbox(u8"锁定相对位置", &CalCtx.lockRelativePosition);
 	ImGui::SameLine();
-	ImGui::Checkbox(u8"需要扳机", &CalCtx.requireTriggerPressToApply);
+	ImGui::Checkbox(u8"按住左右扳机继续校准", &CalCtx.requireTriggerPressToApply);
 
 	// Status field...
 
@@ -451,7 +451,7 @@ void BuildMenu(bool runningInOverlay)
 	{
 		if (CalCtx.validProfile && !CalCtx.enabled)
 		{
-			ImGui::TextColored(ImVec4(0.8f, 0.2f, 0.2f, 1), u8"参照头戴设备 (%s) 未找到，配置文件已禁用", CalCtx.referenceTrackingSystem.c_str());
+			ImGui::TextColored(ImVec4(0.8f, 0.2f, 0.2f, 1), u8"主要头戴设备 (%s) 未找到，配置文件已禁用", CalCtx.referenceTrackingSystem.c_str());
 			ImGui::Text("");
 		}
 
@@ -498,7 +498,7 @@ void BuildMenu(bool runningInOverlay)
 		}
 
 		ImGui::Text("");
-		if (ImGui::Button(u8"将 Chaperone 边界复制到配置文件", ImVec2(width * scale, ImGui::GetTextLineHeight() * 2)))
+		if (ImGui::Button(u8"将 Chaperone 边界信息复制到配置文件", ImVec2(width * scale, ImGui::GetTextLineHeight() * 2)))
 		{
 			LoadChaperoneBounds();
 			SaveProfile(CalCtx);
@@ -525,11 +525,11 @@ void BuildMenu(bool runningInOverlay)
 		ImGui::Text(u8"校准速度");
 
 		ImGui::NextColumn();
-		if (ImGui::RadioButton(u8" 快速          ", speed == CalibrationContext::FAST))
+		if (ImGui::RadioButton(u8" 快           ", speed == CalibrationContext::FAST))
 			CalCtx.calibrationSpeed = CalibrationContext::FAST;
 
 		ImGui::NextColumn();
-		if (ImGui::RadioButton(u8" 慢速          ", speed == CalibrationContext::SLOW))
+		if (ImGui::RadioButton(u8" 慢           ", speed == CalibrationContext::SLOW))
 			CalCtx.calibrationSpeed = CalibrationContext::SLOW;
 
 		ImGui::NextColumn();
