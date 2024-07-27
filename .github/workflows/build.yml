@@ -50,7 +50,7 @@ jobs:
           Invoke-WebRequest "https://udomain.dl.sourceforge.net/project/nsis/NSIS 3/3.10/nsis-3.10-setup.exe?viasf=1" -OutFile $env:TEMP/nsis-setup.exe
           $Run = $Run = $env:TEMP + "/nsis-setup.exe /S /D='C:/Program Files (x86)/NSIS'"
           Invoke-Expression $Run
-          C:/Program Files (x86)/NSIS' | Out-File -FilePath $env:GITHUB_PATH -Append
+          'C:/Program Files (x86)/NSIS' | Out-File -FilePath $env:GITHUB_PATH -Append
 
     - name: Build Installer
       run: makensis /V4 ./install/installer.nsi
