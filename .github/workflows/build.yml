@@ -1,0 +1,62 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: MSBuild
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  # Path to the solution file relative to the root of the project.
+  SOLUTION_FILE_PATH: ./OpenVR-SpaceCalibrator.sln
+
+  # Configuration type to build.
+  # You can convert this to a build matrix if you need coverage of multiple configuration types.
+  # https://docs.github.com/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+  BUILD_CONFIGURATION: Release
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v2
+      with:
+        msbuild-architecture: x64
+
+    - name: Build
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}}
+
+    - name: Upload Build Artifac
+      uses: actions/upload-artifact@v4.3.4
+      with:
+        name: Build
+        path: ./x64/Release
+
+    - name: Install NSIS
+      run: |
+          Invoke-WebRequest "https://udomain.dl.sourceforge.net/project/nsis/NSIS 3/3.10/nsis-3.10-setup.exe?viasf=1" -OutFile $env:TEMP/nsis-setup.exe
+          $Run = $Run = $env:TEMP + "/nsis-setup.exe /S /D='C:/Program Files (x86)/NSIS'"
+          Invoke-Expression $Run
+          'C:/Program Files (x86)/NSIS' | Out-File -FilePath $env:GITHUB_PATH -Append
+
+    - name: Build Installer
+      run: makensis /V4 ./install/installer.nsi
+
+    - name: Upload Installer
+      uses: actions/upload-artifact@v4.3.4
+      with:
+        name: Installer
+        path: ./install/OpenVR-SpaceCalibrator.exe
