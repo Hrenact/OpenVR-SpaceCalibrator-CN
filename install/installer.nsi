@@ -1,6 +1,8 @@
 ;--------------------------------
 ;Include Modern UI
 
+	!define MUI_BGCOLOR "SYSCLR:Window"
+	!define MUI_TEXTCOLOR "SYSCLR:WindowText"
 	!include "MUI2.nsh"
 
 ;--------------------------------
@@ -41,6 +43,7 @@ VAR upgradeInstallation
 ;Languages
  
 	!insertmacro MUI_LANGUAGE "English"
+	!insertmacro MUI_LANGUAGE "SimpChinese"
 
 ;--------------------------------
 ;Macros
